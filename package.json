@@ -1,0 +1,70 @@
+{
+  "name": "@veithly/climux",
+  "version": "0.1.0",
+  "description": "CLI multiplexer for AI agents to leverage professional coding CLI tools (Claude Code, Codex, Gemini CLI, OpenCode)",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "climux": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "ai",
+    "coding",
+    "agent",
+    "claude",
+    "codex",
+    "gemini",
+    "opencode",
+    "mcp",
+    "model-context-protocol",
+    "automation",
+    "developer-tools"
+  ],
+  "author": "veithly",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/veithly/climux.git"
+  },
+  "bugs": {
+    "url": "https://github.com/veithly/climux/issues"
+  },
+  "homepage": "https://github.com/veithly/climux#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "SKILL.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "execa": "^9.0.0",
+    "sql.js": "^1.10.0",
+    "uuid": "^10.0.0",
+    "yaml": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/uuid": "^10.0.0",
+    "@vitest/coverage-v8": "^2.1.9",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
+  }
+}
