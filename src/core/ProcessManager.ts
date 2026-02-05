@@ -161,6 +161,9 @@ export class ProcessManager extends EventEmitter {
       const output = data.toString();
       managed.output.push(output);
 
+      // Stream to console
+      process.stdout.write(output);
+
       // Log to session
       SessionStore.addSessionLog(sessionId, 'assistant', output);
 
@@ -191,6 +194,8 @@ export class ProcessManager extends EventEmitter {
     proc.stderr?.on('data', (data: Buffer) => {
       const output = data.toString();
       managed.output.push(output);
+      // Stream stderr to console
+      process.stderr.write(output);
       SessionStore.addSessionLog(sessionId, 'system', output);
     });
 
