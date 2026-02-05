@@ -1,6 +1,6 @@
 {
   "name": "@veithly/climux",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI multiplexer for AI agents to leverage professional coding CLI tools (Claude Code, Codex, Gemini CLI, OpenCode)",
   "type": "module",
   "main": "dist/index.js",
