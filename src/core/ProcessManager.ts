@@ -86,9 +86,17 @@ export class ProcessManager extends EventEmitter {
     // Build command arguments
     const args = provider.buildArgs(task, options);
 
-    // Get environment variables
+    // Get environment variables - ensure all are properly passed including proxy settings
+    // Filter out undefined values from process.env
+    const baseEnv: Record<string, string> = {};
+    for (const [key, value] of Object.entries(process.env)) {
+      if (value !== undefined) {
+        baseEnv[key] = value;
+      }
+    }
+
     const env: Record<string, string> = {
-      ...process.env as Record<string, string>,
+      ...baseEnv,
       ...provider.getEnv(),
       ...options.env,
     };
@@ -103,6 +111,8 @@ export class ProcessManager extends EventEmitter {
       detached: false,
       // Ensure cleanup on parent exit
       cleanup: true,
+      // Extend the default environment instead of replacing it
+      extendEnv: true,
     });
 
     const managed: ManagedProcess = {
@@ -160,9 +170,17 @@ export class ProcessManager extends EventEmitter {
     // Build resume arguments
     const args = provider.buildResumeArgs(nativeSessionId, options);
 
-    // Get environment variables
+    // Get environment variables - ensure all are properly passed including proxy settings
+    // Filter out undefined values from process.env
+    const baseEnv: Record<string, string> = {};
+    for (const [key, value] of Object.entries(process.env)) {
+      if (value !== undefined) {
+        baseEnv[key] = value;
+      }
+    }
+
     const env: Record<string, string> = {
-      ...process.env as Record<string, string>,
+      ...baseEnv,
       ...provider.getEnv(),
       ...options.env,
     };
@@ -177,6 +195,8 @@ export class ProcessManager extends EventEmitter {
       detached: false,
       // Ensure cleanup on parent exit
       cleanup: true,
+      // Extend the default environment instead of replacing it
+      extendEnv: true,
     });
 
     const managed: ManagedProcess = {
