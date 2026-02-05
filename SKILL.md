@@ -1,302 +1,144 @@
-# Climux Skill Definition
+---
+name: climux
+description: |
+  CLI multiplexer for delegating coding tasks to professional AI coding tools (Claude Code, Codex, Gemini CLI, OpenCode).
 
-> **Skill Name**: climux
-> **Version**: 0.1.0
-> **Purpose**: Delegate coding tasks to professional CLI tools (Claude Code, Codex, Gemini CLI, OpenCode)
+  Use this skill when:
+  - Delegating complex coding tasks to specialized AI coding agents
+  - Running parallel coding sessions across multiple git worktrees
+  - Resuming previous coding sessions to maintain context
+  - Orchestrating multi-agent workflows for large features
+  - Initializing project documentation (CLAUDE.md, AGENTS.md)
+  - Tracking costs and token usage across sessions
 
-## When to Use This Skill
+  Triggers: "use climux", "delegate to codex/claude/gemini", "parallel coding", "multi-agent", "resume session", "coding worktree"
+---
 
-Use Climux when you need to:
-- Execute complex coding tasks that benefit from specialized AI coding tools
-- Run autonomous coding tasks in the background
-- Manage multiple parallel coding sessions across different workspaces
-- Track token usage, costs, and code changes across sessions
-- Leverage git worktrees for parallel feature development
+# Climux
 
-## Prerequisites
+Orchestrate AI coding agents through a unified CLI interface.
 
-Ensure at least one CLI tool is installed:
-- **Claude Code**: `npm install -g @anthropic-ai/claude-code` or `claude --version`
-- **Codex**: `npm install -g @openai/codex` or `codex --version`
-- **Gemini CLI**: `npm install -g @google/gemini-cli` or `gemini --version`
-- **OpenCode**: `npm install -g opencode` or `opencode --version`
-
-Install Climux:
-```bash
-npm install -g @veithly/climux
-
-# Or use npx directly (no installation required)
-npx @veithly/climux <command>
-```
-
-## Core Commands
-
-### 1. Execute a Coding Task
+## Quick Start
 
 ```bash
-# Auto-route to best provider based on task type
-climux run "add user authentication with JWT"
+# Run a task (auto-routes to best provider)
+climux run "implement feature X" --mode task
 
-# Specify a provider
-climux run "fix React component bug" --provider gemini-cli
+# Use specific provider
+climux run "fix bug" --provider codex --mode task
 
-# Task mode (autonomous, non-interactive)
-climux run "refactor database module" --mode task
-
-# Chat mode (interactive)
-climux run "help me understand this code" --mode chat
-
-# Run in specific workspace
-climux run "add tests" --workspace /path/to/project
-
-# Run in git worktree
-climux run "implement feature" --worktree feature-branch
-```
-
-### 2. Session Management
-
-```bash
-# List all sessions
-climux session list
-
-# List sessions by status
-climux session list --status running
-
-# Resume a paused session
+# Resume previous session
 climux session resume <session-id>
-
-# View session details
-climux session show <session-id>
-
-# View session logs
-climux session log <session-id>
-
-# Export session to markdown
-climux session export <session-id> --format markdown
-
-# Delete a session
-climux session delete <session-id>
 ```
 
-### 3. Workspace Management
+## Multi-Agent Parallel Execution
+
+Create isolated worktrees and run tasks in parallel:
 
 ```bash
-# Show current workspace info
-climux workspace info
+# Create worktrees for parallel work
+climux worktree create feature-auth
+climux worktree create feature-api
+climux worktree create feature-ui
 
-# Switch workspace
-climux workspace switch /path/to/project
-
-# Create workspace alias
-climux workspace alias myproject /path/to/project
-
-# Use alias
-climux run "add feature" --workspace @myproject
-```
-
-### 4. Git Worktree Management
-
-```bash
-# Create worktree for parallel development
-climux worktree create feature-auth --branch auth-system
-
-# List worktrees
-climux worktree list
-
-# Switch to worktree
-climux worktree switch feature-auth
-
-# Delete worktree
-climux worktree delete feature-auth
-```
-
-### 5. Status and Statistics
-
-```bash
-# Show real-time status
-climux status
-
-# Show today's statistics
-climux stats
-
-# Show stats by provider
-climux stats --by provider
-
-# Show historical stats
-climux stats --from 2024-01-01 --to 2024-01-31
-```
-
-### 6. Configuration
-
-```bash
-# Show current config
-climux config show
-
-# Show provider status
-climux config show --providers
-
-# Set default provider
-climux config set defaultProvider gemini-cli
-
-# Initialize project config
-climux config init
-
-# Export config
-climux config export > config.yaml
-
-# Import config
-climux config import config.yaml
-```
-
-### 7. MCP Server Mode
-
-```bash
-# Start as MCP server (for integration with other AI tools)
-climux mcp serve
-
-# List installed MCPs
-climux mcp list
-
-# Install MCP package
-climux mcp install @anthropic/mcp-server-filesystem
-
-# Sync skills across providers
-climux skill sync
-```
-
-## Routing Rules
-
-Climux automatically routes tasks to the best provider:
-
-| Task Pattern | Provider | Reason |
-|--------------|----------|--------|
-| `frontend\|react\|vue\|css\|ui\|style` | gemini-cli | Best for UI/frontend work |
-| `debug\|fix\|bug\|error\|issue` | codex | Specialized for debugging |
-| `.*` (default) | claude-code | General-purpose coding |
-
-## Provider Capabilities
-
-| Provider | Chat | Task | Resume | MCP | Skills |
-|----------|------|------|--------|-----|--------|
-| claude-code | ✅ | ✅ | ✅ | ✅ | ✅ |
-| codex | ✅ | ✅ | ✅ | ✅ | ✅ |
-| gemini-cli | ✅ | ✅ | ✅ | ✅ | ✅ |
-| opencode | ✅ | ✅ | ✅ | ✅ | ❌ |
-
-## MCP Server Tools
-
-When running as an MCP server, Climux exposes these tools:
-
-| Tool | Description |
-|------|-------------|
-| `run_task` | Execute a coding task |
-| `session_list` | List sessions with filters |
-| `session_resume` | Resume a paused session |
-| `session_send` | Send message to active session |
-| `get_status` | Get system status |
-| `worktree_create` | Create git worktree |
-| `worktree_list` | List worktrees |
-| `get_session_stats` | Get session statistics |
-| `get_daily_summary` | Get aggregated metrics |
-
-## Usage Examples for AI Agents
-
-### Example 1: Execute a Complex Feature
-
-```bash
-# Create a worktree for the feature
-climux worktree create auth-system --branch feature/auth
-
-# Run the coding task
-climux run "implement user authentication with JWT tokens, including login, logout, and token refresh endpoints" --worktree auth-system --mode task
-
-# Check progress
-climux status
-
-# View the session
-climux session show <session-id>
-```
-
-### Example 2: Parallel Development
-
-```bash
-# Create multiple worktrees
-climux worktree create frontend-updates
-climux worktree create api-refactor
-climux worktree create test-coverage
-
-# Run tasks in parallel (each in its own worktree)
-climux run "update React components to use hooks" --worktree frontend-updates &
-climux run "refactor API endpoints for REST compliance" --worktree api-refactor &
-climux run "add unit tests for core modules" --worktree test-coverage &
+# Run parallel tasks (use & for background)
+climux run "implement auth" --worktree feature-auth --mode task &
+climux run "build API" --worktree feature-api --mode task &
+climux run "create UI" --worktree feature-ui --mode task &
 
 # Monitor all sessions
 climux status
 ```
 
-### Example 3: Debug and Fix
+## Session Memory & Resume
+
+Reuse previous session context:
 
 ```bash
-# Use Codex for debugging (auto-routed)
-climux run "debug the authentication failure in login.ts"
+# List sessions to find previous work
+climux session list --status completed
 
-# Or explicitly use Codex
-climux run "fix the memory leak in processQueue" --provider codex
+# Resume with full context preserved
+climux session resume <session-id>
+
+# View session history
+climux session log <session-id>
+
+# Export for documentation
+climux session export <session-id> --format md
 ```
 
-### Example 4: Integration via MCP
+## Project Initialization
 
-```javascript
-// In your MCP client
-const result = await mcpClient.callTool('run_task', {
-  task: 'add input validation to all API endpoints',
-  mode: 'task',
-  workspace: '/path/to/project'
-});
+Initialize project documentation for AI agents:
 
-console.log(result.sessionId);
-console.log(result.status);
+```bash
+# Initialize climux config
+climux config init
+
+# Create workspace alias for quick access
+climux workspace alias myproject .
 ```
 
-## Error Handling
+Then create these files manually:
 
-| Error | Meaning | Recovery |
-|-------|---------|----------|
-| `PROVIDER_NOT_FOUND` | Unknown provider name | Use: claude-code, codex, gemini-cli, opencode |
-| `PROVIDER_NOT_AVAILABLE` | Provider not installed | Install the provider CLI or use fallback |
-| `SESSION_NOT_FOUND` | Session ID doesn't exist | Use `climux session list` to find valid IDs |
-| `PROCESS_CRASHED` | CLI process crashed | Session auto-recovers if provider supports resume |
-| `RATE_LIMITED` | API rate limit hit | Auto-fallback to next provider |
-
-## Configuration File Locations
-
-- **Global config**: `~/.climux/config.yaml`
-- **Project config**: `.climux/config.yaml` (in project root)
-- **Database**: `~/.climux/climux.db` (SQLite)
-
-## Best Practices for AI Agents
-
-1. **Use task mode** for autonomous operations: `--mode task`
-2. **Create worktrees** for parallel feature development to avoid conflicts
-3. **Check status** before starting new tasks to avoid resource contention
-4. **Use workspace aliases** for frequently accessed projects
-5. **Review session logs** to understand what changes were made
-6. **Export sessions** for documentation or handoff to humans
-7. **Monitor costs** with `climux stats` for budget awareness
-
-## Fallback Behavior
-
-If the preferred provider is unavailable, Climux automatically falls back:
-
-```
-claude-code → gemini-cli → codex → opencode
+**CLAUDE.md** - Project context for Claude:
+```markdown
+# Project: [Name]
+## Tech Stack: [frameworks, languages]
+## Key Patterns: [architecture decisions]
+## Testing: [how to run tests]
 ```
 
-You can customize this in config:
-```yaml
-fallbackOrder:
-  - claude-code
-  - gemini-cli
-  - codex
-  - opencode
+**AGENTS.md** - Multi-agent coordination rules:
+```markdown
+# Agent Coordination
+## Worktree Naming: feature-*, bugfix-*, refactor-*
+## Merge Strategy: squash commits
+## Review Required: security changes
+```
+
+## Command Reference
+
+| Command | Purpose |
+|---------|---------|
+| `climux run "<task>" --mode task` | Execute autonomous task |
+| `climux run "<task>" --provider <name>` | Use specific provider |
+| `climux run "<task>" --worktree <name>` | Run in worktree |
+| `climux session list` | List all sessions |
+| `climux session resume <id>` | Resume session |
+| `climux worktree create <name>` | Create git worktree |
+| `climux worktree list` | List worktrees |
+| `climux status` | Show active sessions |
+| `climux stats` | Show usage statistics |
+
+## Provider Selection
+
+| Pattern | Best Provider | Use Case |
+|---------|---------------|----------|
+| `frontend\|react\|vue\|css` | gemini-cli | UI/frontend |
+| `debug\|fix\|bug\|error` | codex | Debugging |
+| General tasks | claude-code | Default |
+
+## Advanced Patterns
+
+See [references/parallel-patterns.md](references/parallel-patterns.md) for:
+- Complex multi-agent orchestration
+- Worktree lifecycle management
+- Session chaining strategies
+
+See [references/project-templates.md](references/project-templates.md) for:
+- CLAUDE.md templates by project type
+- AGENTS.md coordination patterns
+- Config presets
+
+## Error Recovery
+
+```bash
+# If session crashed, resume it
+climux session list --status crashed
+climux session resume <session-id>
+
+# If provider unavailable, fallback is automatic
+# Order: claude-code → gemini-cli → codex → opencode
 ```
