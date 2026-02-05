@@ -22,7 +22,7 @@ export class OpenCodeProvider extends BaseProvider {
     resume: true,
     streaming: true,
     mcp: true,
-    skills: false,
+    skills: true,
   };
 
   private innerProvider: string;
@@ -135,7 +135,11 @@ export class OpenCodeProvider extends BaseProvider {
   }
 
   getMcpConfigPath(): string {
-    return this.config?.mcpConfigPath || join(homedir(), '.opencode', 'mcp.json');
+    return this.config?.mcpConfigPath || join(homedir(), '.config', 'opencode', 'mcp.json');
+  }
+
+  getSkillsConfigPath(): string | undefined {
+    return this.config?.skillsConfigPath || join(homedir(), '.config', 'opencode', 'skills');
   }
 
   /**
