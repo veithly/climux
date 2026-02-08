@@ -45,6 +45,7 @@
     "dist",
     "README.md",
     "SKILL.md",
+    "references",
     "LICENSE"
   ],
   "engines": {
